@@ -1,9 +1,11 @@
 let _ = require('lodash');
 
+function calcFuel(mass) {
+  return Math.floor(mass/3) -2;
+}
+
 function solution1(input) {
-  return _.sum(input.map(i => i/3)
-  .map(i => Math.floor(i))
-  .map(i => i-2));
+  return _.sum(input.map(calcFuel));
 }
 
 function solution2(input) {
