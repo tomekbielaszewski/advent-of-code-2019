@@ -1,3 +1,5 @@
 node/.idea
 node/node_modules
 node/*.iml
+java/.gradle
+java/.idea
