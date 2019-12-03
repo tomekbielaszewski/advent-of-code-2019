@@ -1,49 +1,61 @@
 package com.grizwold.aoc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day3 {
-    private static final int[] STARTING_POINT = new int[]{0, 0};
+    private static final Point STARTING_POINT = new Point(0, 0);
 
     public long manhattanDistanceToClosestIntersection(String input) {
         String[] routes = input.split("\n");
-        List<int[]> route1Points = routeToPoints(routes[0]);
-        List<int[]> route2Points = routeToPoints(routes[1]);
-        List<int[]> intersections = getIntersections(route1Points, route2Points);
+        List<Point> route1Points = routeToPoints(routes[0]);
+        List<Point> route2Points = routeToPoints(routes[1]);
+        List<Point> intersections = getIntersections(route1Points, route2Points);
         return getManhattanDistanceToClosestIntersection(intersections);
     }
 
-    private long getManhattanDistanceToClosestIntersection(List<int[]> intersections) {
+//    public long stepsDistanceToClosestIntersection(String input) {
+//        String[] routes = input.split("\n");
+//        List<Point> route1Points = routeToPoints(routes[0]);
+//        List<Point> route2Points = routeToPoints(routes[1]);
+//        List<Point> intersections = getIntersections(route1Points, route2Points);
+//        return getStepsDistanceToClosestIntersection(route1Points, route2Points, intersections);
+//    }
+
+//    private long getStepsDistanceToClosestIntersection(List<Point> route1, List<Point> route2, List<Point> intersections) {
+//        intersections.stream()
+//                .map()
+//        return 0;
+//    }
+
+    private long getManhattanDistanceToClosestIntersection(List<Point> intersections) {
         return intersections.stream()
-                .mapToLong(point -> Math.abs(point[0]) + Math.abs(point[1]))
+                .mapToLong(p -> Math.abs(p.x) + Math.abs(p.y))
                 .min()
                 .getAsLong();
     }
 
-    public List<int[]> getIntersections(List<int[]> route1, List<int[]> route2) {
-        return route1.stream()
-                .filter(p -> !Arrays.equals(p, STARTING_POINT))
-                .filter(p1 -> route2.stream()
-                        .anyMatch(p2 -> p1[0] == p2[0] && p1[1] == p2[1]))
+    private List<Point> getIntersections(List<Point> route1, List<Point> route2) {
+        return route1.parallelStream()
+                .filter(p -> !p.equals(STARTING_POINT))
+                .filter(route2::contains)
                 .collect(Collectors.toList());
     }
 
-    private List<int[]> routeToPoints(String route) {
+    private List<Point> routeToPoints(String route) {
         String[] lines = route.split(",");
-        int[] from = STARTING_POINT;
-        List<int[]> points = new ArrayList<>();
+        Point from = STARTING_POINT;
+        List<Point> points = new ArrayList<>();
         for (String line : lines) {
-            List<int[]> linePoints = lineToPoints(from, line);
+            List<Point> linePoints = lineToPoints(from, line);
             points.addAll(linePoints);
             from = linePoints.get(linePoints.size() - 1);
         }
         return points;
     }
 
-    private List<int[]> lineToPoints(int[] from, String line) {
+    private List<Point> lineToPoints(Point from, String line) {
         char direction = line.charAt(0);
         int distance = Integer.parseInt(line.substring(1));
         switch (direction) {
@@ -60,35 +72,59 @@ public class Day3 {
         }
     }
 
-    private List<int[]> right(int[] from, int distance) {
-        List<int[]> points = new ArrayList<>();
-        for (int i = from[0]; i <= distance + from[0]; i++) {
-            points.add(new int[]{i, from[1]});
+    private List<Point> right(Point from, int distance) {
+        List<Point> points = new ArrayList<>();
+        for (int i = from.x; i <= distance + from.x; i++) {
+            points.add(new Point(i, from.y));
         }
         return points;
     }
 
-    private List<int[]> left(int[] from, int distance) {
-        List<int[]> points = new ArrayList<>();
-        for (int i = from[0]; i >= from[0] - distance; i--) {
-            points.add(new int[]{i, from[1]});
+    private List<Point> left(Point from, int distance) {
+        List<Point> points = new ArrayList<>();
+        for (int i = from.x; i >= from.x - distance; i--) {
+            points.add(new Point(i, from.y));
         }
         return points;
     }
 
-    private List<int[]> down(int[] from, int distance) {
-        List<int[]> points = new ArrayList<>();
-        for (int i = from[1]; i >= from[1] - distance; i--) {
-            points.add(new int[]{from[0], i});
+    private List<Point> down(Point from, int distance) {
+        List<Point> points = new ArrayList<>();
+        for (int i = from.y; i >= from.y - distance; i--) {
+            points.add(new Point(from.x, i));
         }
         return points;
     }
 
-    private List<int[]> up(int[] from, int distance) {
-        List<int[]> points = new ArrayList<>();
-        for (int i = from[1]; i <= from[1] + distance; i++) {
-            points.add(new int[]{from[0], i});
+    private List<Point> up(Point from, int distance) {
+        List<Point> points = new ArrayList<>();
+        for (int i = from.y; i <= from.y + distance; i++) {
+            points.add(new Point(from.x, i));
         }
         return points;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
