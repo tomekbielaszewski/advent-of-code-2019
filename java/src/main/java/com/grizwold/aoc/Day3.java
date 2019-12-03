@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Day3 {
     private static final int[] STARTING_POINT = new int[]{0, 0};
 
-    public long distanceToClosestIntersection(String input) {
+    public long manhattanDistanceToClosestIntersection(String input) {
         String[] routes = input.split("\n");
         List<int[]> route1Points = routeToPoints(routes[0]);
         List<int[]> route2Points = routeToPoints(routes[1]);
