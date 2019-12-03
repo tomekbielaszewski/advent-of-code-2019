@@ -15,22 +15,24 @@ public class Day3 {
         return getManhattanDistanceToClosestIntersection(intersections);
     }
 
-//    public long stepsDistanceToClosestIntersection(String input) {
-//        String[] routes = input.split("\n");
-//        List<Point> route1Points = routeToPoints(routes[0]);
-//        List<Point> route2Points = routeToPoints(routes[1]);
-//        List<Point> intersections = getIntersections(route1Points, route2Points);
-//        return getStepsDistanceToClosestIntersection(route1Points, route2Points, intersections);
-//    }
+    public List<Long> stepsDistanceToClosestIntersection(String input) {
+        String[] routes = input.split("\n");
+        List<Point> route1Points = routeToPoints(routes[0]);
+        List<Point> route2Points = routeToPoints(routes[1]);
+        List<Point> intersections = getIntersections(route1Points, route2Points);
+        return getStepsDistanceToClosestIntersection(route1Points, route2Points, intersections);
+    }
 
-//    private long getStepsDistanceToClosestIntersection(List<Point> route1, List<Point> route2, List<Point> intersections) {
-//        intersections.stream()
-//                .map()
-//        return 0;
-//    }
+    private List<Long> getStepsDistanceToClosestIntersection(List<Point> route1, List<Point> route2, List<Point> intersections) {
+        return intersections.parallelStream()
+                .mapToLong(i -> route1.indexOf(i) + route2.indexOf(i))
+                .sorted()
+                .boxed()
+                .collect(Collectors.toList());
+    }
 
     private long getManhattanDistanceToClosestIntersection(List<Point> intersections) {
-        return intersections.stream()
+        return intersections.parallelStream()
                 .mapToLong(p -> Math.abs(p.x) + Math.abs(p.y))
                 .min()
                 .getAsLong();
@@ -52,7 +54,7 @@ public class Day3 {
             points.addAll(linePoints);
             from = linePoints.get(linePoints.size() - 1);
         }
-        return points;
+        return points.parallelStream().distinct().collect(Collectors.toList());
     }
 
     private List<Point> lineToPoints(Point from, String line) {
