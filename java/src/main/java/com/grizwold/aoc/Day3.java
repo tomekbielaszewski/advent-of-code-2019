@@ -15,7 +15,7 @@ public class Day3 {
         return getManhattanDistanceToClosestIntersection(intersections);
     }
 
-    public List<Long> stepsDistanceToClosestIntersection(String input) {
+    public long stepsDistanceToClosestIntersection(String input) {
         String[] routes = input.split("\n");
         List<Point> route1Points = routeToPoints(routes[0]);
         List<Point> route2Points = routeToPoints(routes[1]);
@@ -23,12 +23,11 @@ public class Day3 {
         return getStepsDistanceToClosestIntersection(route1Points, route2Points, intersections);
     }
 
-    private List<Long> getStepsDistanceToClosestIntersection(List<Point> route1, List<Point> route2, List<Point> intersections) {
+    private long getStepsDistanceToClosestIntersection(List<Point> route1, List<Point> route2, List<Point> intersections) {
         return intersections.parallelStream()
                 .mapToLong(i -> route1.indexOf(i) + route2.indexOf(i))
-                .sorted()
-                .boxed()
-                .collect(Collectors.toList());
+                .min()
+                .getAsLong();
     }
 
     private long getManhattanDistanceToClosestIntersection(List<Point> intersections) {
@@ -54,7 +53,7 @@ public class Day3 {
             points.addAll(linePoints);
             from = linePoints.get(linePoints.size() - 1);
         }
-        return points.parallelStream().distinct().collect(Collectors.toList());
+        return points.stream().distinct().collect(Collectors.toList());
     }
 
     private List<Point> lineToPoints(Point from, String line) {
