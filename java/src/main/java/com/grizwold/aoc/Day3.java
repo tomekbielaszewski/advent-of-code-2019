@@ -13,10 +13,10 @@ public class Day3 {
         List<int[]> route1Points = routeToPoints(routes[0]);
         List<int[]> route2Points = routeToPoints(routes[1]);
         List<int[]> intersections = getIntersections(route1Points, route2Points);
-        return getDistanceToClosestIntersection(intersections);
+        return getManhattanDistanceToClosestIntersection(intersections);
     }
 
-    private long getDistanceToClosestIntersection(List<int[]> intersections) {
+    private long getManhattanDistanceToClosestIntersection(List<int[]> intersections) {
         return intersections.stream()
                 .mapToLong(point -> Math.abs(point[0]) + Math.abs(point[1]))
                 .min()
