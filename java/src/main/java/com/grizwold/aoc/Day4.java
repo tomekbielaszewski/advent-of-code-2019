@@ -2,6 +2,8 @@ package com.grizwold.aoc;
 
 import org.apache.commons.lang3.StringUtils;
 
+import static java.util.stream.Collectors.groupingBy;
+
 public class Day4 {
     public boolean isValid(String password) {
         if (StringUtils.isBlank(password)) return false;
@@ -12,14 +14,13 @@ public class Day4 {
     }
 
     private boolean hasDoubledAdjacentDigits(String password) {
-        char[] chars = password.toCharArray();
-        char last = chars[0];
-        boolean repeats = false;
-        for (int i = 1; i < chars.length; i++) {
-            if (last == chars[i]) repeats = true;
-            last = chars[i];
-        }
-        return repeats;
+        return password.chars()
+                .boxed()
+                .collect(groupingBy(i -> i))
+                .values()
+                .stream()
+                .anyMatch(l -> l.size() == 2);
+
     }
 
     private boolean digitsDecreases(String password) {

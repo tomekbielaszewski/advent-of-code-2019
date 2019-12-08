@@ -12,14 +12,18 @@ public class Day4Test {
 
     @Test
     public void examples() {
-        example("111111", true);
+//        example("111111", true); not applicable to part 2
         example("223450", false);
         example("123789", false);
+        example("112233", true);
+        example("123444", false);
+        example("111122", true);
+        example("112222", true);
     }
 
     @Test
     public void solution() {
-        System.out.println("Solution for day 4 part 1 is: " +
+        System.out.println("Solution for day 4 part 2 is: " +
                 IntStream.range(357253, 892943)
                         .filter(i -> day4.isValid(String.valueOf(i)))
                         .count()
