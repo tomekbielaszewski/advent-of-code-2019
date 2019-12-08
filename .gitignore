@@ -4,5 +4,6 @@ node/*.iml
 java/.gradle
 java/.idea
 java/build
+java/out
 rust/.idea
 rust/target
