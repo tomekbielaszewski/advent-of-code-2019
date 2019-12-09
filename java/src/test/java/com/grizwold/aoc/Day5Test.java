@@ -6,10 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class Day5Test {
     @Test
@@ -59,12 +60,15 @@ public class Day5Test {
         System.out.println(solution(program, "5"));
     }
 
-    private void example(String inputStr, String resultStr) {
+    private void example(String inputStr, String expected) {
         Day5 day5 = new Day5();
-        int[] expected = day5.toArray(resultStr);
         int[] memoryAfter = day5.run(inputStr, System.in, System.out);
+        String memoryAsString = Arrays.toString(memoryAfter);
+        memoryAsString = memoryAsString
+                .substring(1, memoryAsString.length() - 1)
+                .replaceAll(" ", "");
 
-        assertThat(memoryAfter, equalTo(expected));
+        assertThat(memoryAsString, equalTo(expected));
     }
 
     private void example2(String program, String input, String expectedOutput) {
@@ -76,7 +80,7 @@ public class Day5Test {
         day5.run(program, vmInput, vmOut);
 
         String output = new String(outputStream.toByteArray());
-        assertThat(output, is(expectedOutput));
+        assertThat(output.replaceAll("\\s", ""), is(expectedOutput));
     }
 
     private String solution(String program, String input) {
