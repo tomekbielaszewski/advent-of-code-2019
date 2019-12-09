@@ -41,7 +41,7 @@ public class VM {
                 opcodes.stream()
                         .filter(op -> op.matching(memory[instructionPointer]))
                         .findFirst()
-                        .orElseThrow(ProgramTerminated::new)
+                        .orElseThrow(() -> new ProgramTerminated("Illegal instruction code: " + memory[instructionPointer]))
                         .execute(this);
             }
         } catch (RuntimeException e) {
