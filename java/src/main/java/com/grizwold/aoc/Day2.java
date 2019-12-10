@@ -41,7 +41,7 @@ public class Day2 {
     }
 
     private void terminate() {
-        throw new ProgramTerminated();
+        throw new ProgramTerminated("stop");
     }
 
     private void add(int i, int[] memory) {
