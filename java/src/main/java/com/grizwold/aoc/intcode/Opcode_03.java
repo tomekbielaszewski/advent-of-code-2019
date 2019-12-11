@@ -6,6 +6,7 @@ import static com.grizwold.aoc.intcode.ParameterMode.IMMEDIATE;
 
 class Opcode_03 implements Opcode {
     private String opcode;
+    Scanner sc;
 
     @Override
     public boolean matching(int opcodeDef) {
@@ -17,7 +18,10 @@ class Opcode_03 implements Opcode {
     public void execute(VM vm) {
         System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
 
-        Scanner sc = new Scanner(vm.in);
+        if (sc == null) {
+            sc = new Scanner(vm.in);
+        }
+
         int input = sc.nextInt();
         int resultPointer = getValue(vm.instructionPointer + 1, IMMEDIATE, vm);
 

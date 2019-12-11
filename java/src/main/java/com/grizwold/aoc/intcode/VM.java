@@ -2,8 +2,7 @@ package com.grizwold.aoc.intcode;
 
 import com.grizwold.aoc.ProgramTerminated;
 
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -16,13 +15,20 @@ public class VM {
     boolean isRunning = true;
 
     final InputStream in;
-    final PrintStream out;
+    final OutputStream out;
+    final PrintStream printOut;
 
     private Set<Opcode> opcodes = new HashSet<>();
 
-    public VM(InputStream in, PrintStream out) {
+    public VM(String input) {
+        this(new ByteArrayInputStream(input.getBytes()),
+                new ByteArrayOutputStream());
+    }
+
+    public VM(InputStream in, OutputStream out) {
         this.in = in;
         this.out = out;
+        this.printOut = new PrintStream(out);
         opcodes.add(new Opcode_01());
         opcodes.add(new Opcode_02());
         opcodes.add(new Opcode_99());
@@ -48,6 +54,17 @@ public class VM {
             System.out.println("Program errored! " + e.toString());
         }
         return memory;
+    }
+
+    public String getOutputString() {
+        if (this.out instanceof ByteArrayOutputStream) {
+            return new String(((ByteArrayOutputStream) out).toByteArray());
+        }
+        return "Unsupported output stream. Use VM::getOutput";
+    }
+
+    public OutputStream getOutput() {
+        return out;
     }
 
     private void loadProgram(String str) {

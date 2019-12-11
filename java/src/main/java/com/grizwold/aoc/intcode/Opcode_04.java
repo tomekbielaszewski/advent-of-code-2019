@@ -17,7 +17,7 @@ class Opcode_04 implements Opcode {
 
         int result = getArg1(vm, paramModes);
         vm.instructionPointer += 2;
-        vm.out.println(result);
+        vm.printOut.println(result);
 
         System.out.printf(" print: \"%s\" | modes: %s\n", result, paramModes[0]);
 
