@@ -2,8 +2,7 @@ package com.grizwold.aoc;
 
 import com.grizwold.aoc.intcode.VM;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class Day7 {
     public int runSequence(String program, Integer[] sequence) {
@@ -22,7 +21,37 @@ public class Day7 {
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public int runSequenceInFeedbackLoop(String program, Integer[] sequence) {
-        return 0;
+        BlockingQueue<Integer> aIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Integer> bIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Integer> cIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Integer> dIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Integer> eIn = new ArrayBlockingQueue<>(10);
+
+        VM vmA = new VM(aIn, bIn);
+        VM vmB = new VM(bIn, cIn);
+        VM vmC = new VM(cIn, dIn);
+        VM vmD = new VM(dIn, eIn);
+        VM vmE = new VM(eIn, aIn);
+
+        vmA.write(sequence[0], 0);
+        vmB.write(sequence[1]);
+        vmC.write(sequence[2]);
+        vmD.write(sequence[3]);
+        vmE.write(sequence[4]);
+
+        executor.submit(() -> vmA.execute(program));
+        executor.submit(() -> vmB.execute(program));
+        executor.submit(() -> vmC.execute(program));
+        executor.submit(() -> vmD.execute(program));
+        Future<int[]> vmEFuture = executor.submit(() -> vmE.execute(program));
+
+        try {
+            vmEFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return vmE.read();
     }
 
     private Integer run(String program, int input1, int input2) {
