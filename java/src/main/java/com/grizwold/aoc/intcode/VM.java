@@ -2,11 +2,12 @@ package com.grizwold.aoc.intcode;
 
 import com.grizwold.aoc.ProgramTerminated;
 
-import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
 
 public class VM {
@@ -14,21 +15,21 @@ public class VM {
     int instructionPointer = 0;
     boolean isRunning = true;
 
-    final InputStream in;
-    final OutputStream out;
-    final PrintStream printOut;
+    final BlockingQueue<Integer> in;
+    final BlockingQueue<Integer> out;
 
     private Set<Opcode> opcodes = new HashSet<>();
 
-    public VM(String input) {
-        this(new ByteArrayInputStream(input.getBytes()),
-                new ByteArrayOutputStream());
+    public VM(Integer... inputs) {
+        this(new ArrayBlockingQueue<Integer>(inputs.length) {{
+                 this.addAll(Arrays.asList(inputs));
+             }},
+                new ArrayBlockingQueue<Integer>(1));
     }
 
-    public VM(InputStream in, OutputStream out) {
+    public VM(BlockingQueue<Integer> in, BlockingQueue<Integer> out) {
         this.in = in;
         this.out = out;
-        this.printOut = new PrintStream(out);
         opcodes.add(new Opcode_01());
         opcodes.add(new Opcode_02());
         opcodes.add(new Opcode_99());
@@ -56,14 +57,27 @@ public class VM {
         return memory;
     }
 
-    public String getOutputString() {
-        if (this.out instanceof ByteArrayOutputStream) {
-            return new String(((ByteArrayOutputStream) out).toByteArray());
+    public void write(Integer... ints) {
+        for (Integer anInt : ints) {
+            try {
+                in.put(anInt);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
-        return "Unsupported output stream. Use VM::getOutput";
     }
 
-    public OutputStream getOutput() {
+    public Integer read() {
+        try {
+            return out.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public BlockingQueue<Integer> getOutput() {
         return out;
     }
 

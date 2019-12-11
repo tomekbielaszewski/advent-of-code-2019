@@ -2,6 +2,9 @@ package com.grizwold.aoc;
 
 import com.grizwold.aoc.intcode.VM;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Day7 {
     public int runSequence(String program, Integer[] sequence) {
         if (sequence == null || sequence.length != 5)
@@ -16,9 +19,15 @@ public class Day7 {
         return lastResult;
     }
 
-    private int run(String program, int input1, int input2) {
-        VM vm = new VM(input1 + " " + input2);
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
+
+    public int runSequenceInFeedbackLoop(String program, Integer[] sequence) {
+        return 0;
+    }
+
+    private Integer run(String program, int input1, int input2) {
+        VM vm = new VM(input1, input2);
         vm.execute(program);
-        return Integer.parseInt(vm.getOutputString().replaceAll("\\s", ""));
+        return vm.getOutput().poll();
     }
 }

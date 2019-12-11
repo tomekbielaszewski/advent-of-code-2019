@@ -1,5 +1,7 @@
 package com.grizwold.aoc.intcode;
 
+import java.util.concurrent.BlockingQueue;
+
 class Opcode_04 implements Opcode {
     private ParameterMode[] paramModes;
     private String opcode;
@@ -17,9 +19,18 @@ class Opcode_04 implements Opcode {
 
         int result = getArg1(vm, paramModes);
         vm.instructionPointer += 2;
-        vm.printOut.println(result);
+        write(vm.out, result);
 
         System.out.printf(" print: \"%s\" | modes: %s\n", result, paramModes[0]);
 
+    }
+
+    private void write(BlockingQueue<Integer> out, int result) {
+        try {
+            out.put(result);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }
