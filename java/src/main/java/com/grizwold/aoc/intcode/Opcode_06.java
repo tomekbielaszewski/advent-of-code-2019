@@ -5,7 +5,7 @@ class Opcode_06 implements Opcode {
     private String opcode;
 
     @Override
-    public boolean matching(int opcodeDef) {
+    public boolean matching(long opcodeDef) {
         opcode = Utils.toString(opcodeDef);
         paramModes = paramModes(opcode);
         return opcode.matches("...06");
@@ -15,10 +15,10 @@ class Opcode_06 implements Opcode {
     public void execute(VM vm) {
         System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
 
-        int result = getArg1(vm, paramModes);
-        int jump = getArg2(vm, paramModes);
+        long result = getArg1(vm, paramModes);
+        long jump = getArg2(vm, paramModes);
         if (result == 0) {
-            vm.instructionPointer = jump;
+            vm.instructionPointer = (int) jump;
         } else {
             vm.instructionPointer += 3;
         }

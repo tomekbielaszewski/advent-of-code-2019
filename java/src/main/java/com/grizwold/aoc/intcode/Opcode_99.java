@@ -4,7 +4,7 @@ class Opcode_99 implements Opcode {
     private String opcode;
 
     @Override
-    public boolean matching(int opcodeDef) {
+    public boolean matching(long opcodeDef) {
         opcode = Utils.toString(opcodeDef);
         return opcode.matches("...99");
     }

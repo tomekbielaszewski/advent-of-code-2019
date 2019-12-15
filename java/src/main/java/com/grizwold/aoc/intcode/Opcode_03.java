@@ -8,7 +8,7 @@ class Opcode_03 implements Opcode {
     private String opcode;
 
     @Override
-    public boolean matching(int opcodeDef) {
+    public boolean matching(long opcodeDef) {
         opcode = Utils.toString(opcodeDef);
         return opcode.matches("...03");
     }
@@ -17,8 +17,8 @@ class Opcode_03 implements Opcode {
     public void execute(VM vm) {
         System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
 
-        int input = read(vm.in);
-        int resultPointer = getValue(vm.instructionPointer + 1, IMMEDIATE, vm);
+        long input = read(vm.in);
+        int resultPointer = (int) getValue(vm.instructionPointer + 1, IMMEDIATE, vm);
 
         vm.memory[resultPointer] = input;
         vm.instructionPointer += 2;
@@ -26,7 +26,7 @@ class Opcode_03 implements Opcode {
         System.out.printf("read to %s\n", resultPointer);
     }
 
-    private Integer read(BlockingQueue<Integer> in) {
+    private Long read(BlockingQueue<Long> in) {
         try {
             return in.take();
         } catch (InterruptedException e) {

@@ -5,11 +5,11 @@ import com.grizwold.aoc.intcode.VM;
 import java.util.concurrent.*;
 
 public class Day7 {
-    public int runSequence(String program, Integer[] sequence) {
+    public long runSequence(String program, Integer[] sequence) {
         if (sequence == null || sequence.length != 5)
             throw new IllegalArgumentException("sequence has to be 5 digits long");
 
-        int lastResult = 0;
+        long lastResult = 0;
         for (int i = 0; i < sequence.length; i++) {
             int input = sequence[i];
             lastResult = run(program, input, lastResult);
@@ -20,12 +20,12 @@ public class Day7 {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-    public int runSequenceInFeedbackLoop(String program, Integer[] sequence) {
-        BlockingQueue<Integer> aIn = new ArrayBlockingQueue<>(10);
-        BlockingQueue<Integer> bIn = new ArrayBlockingQueue<>(10);
-        BlockingQueue<Integer> cIn = new ArrayBlockingQueue<>(10);
-        BlockingQueue<Integer> dIn = new ArrayBlockingQueue<>(10);
-        BlockingQueue<Integer> eIn = new ArrayBlockingQueue<>(10);
+    public long runSequenceInFeedbackLoop(String program, Long[] sequence) {
+        BlockingQueue<Long> aIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Long> bIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Long> cIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Long> dIn = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Long> eIn = new ArrayBlockingQueue<>(10);
 
         VM vmA = new VM(aIn, bIn);
         VM vmB = new VM(bIn, cIn);
@@ -33,7 +33,7 @@ public class Day7 {
         VM vmD = new VM(dIn, eIn);
         VM vmE = new VM(eIn, aIn);
 
-        vmA.write(sequence[0], 0);
+        vmA.write(sequence[0], 0l);
         vmB.write(sequence[1]);
         vmC.write(sequence[2]);
         vmD.write(sequence[3]);
@@ -43,7 +43,7 @@ public class Day7 {
         executor.submit(() -> vmB.execute(program));
         executor.submit(() -> vmC.execute(program));
         executor.submit(() -> vmD.execute(program));
-        Future<int[]> vmEFuture = executor.submit(() -> vmE.execute(program));
+        Future<long[]> vmEFuture = executor.submit(() -> vmE.execute(program));
 
         try {
             vmEFuture.get();
@@ -54,7 +54,7 @@ public class Day7 {
         return vmE.read();
     }
 
-    private Integer run(String program, int input1, int input2) {
+    private Long run(String program, long input1, long input2) {
         VM vm = new VM(input1, input2);
         vm.execute(program);
         return vm.getOutput().poll();

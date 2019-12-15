@@ -11,23 +11,24 @@ import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
 
 public class VM {
-    int[] memory;
+    long[] memory;
     int instructionPointer = 0;
+    int relativeBase = 0;
     boolean isRunning = true;
 
-    final BlockingQueue<Integer> in;
-    final BlockingQueue<Integer> out;
+    final BlockingQueue<Long> in;
+    final BlockingQueue<Long> out;
 
     private Set<Opcode> opcodes = new HashSet<>();
 
-    public VM(Integer... inputs) {
-        this(new ArrayBlockingQueue<Integer>(inputs.length) {{
+    public VM(Long... inputs) {
+        this(new ArrayBlockingQueue<Long>(inputs.length) {{
                  this.addAll(Arrays.asList(inputs));
              }},
-                new ArrayBlockingQueue<Integer>(1));
+                new ArrayBlockingQueue<Long>(1));
     }
 
-    public VM(BlockingQueue<Integer> in, BlockingQueue<Integer> out) {
+    public VM(BlockingQueue<Long> in, BlockingQueue<Long> out) {
         this.in = in;
         this.out = out;
         opcodes.add(new Opcode_01());
@@ -41,7 +42,7 @@ public class VM {
         opcodes.add(new Opcode_08());
     }
 
-    public int[] execute(String program) {
+    public long[] execute(String program) {
         loadProgram(program);
         try {
             while (isRunning) {
@@ -57,8 +58,8 @@ public class VM {
         return memory;
     }
 
-    public void write(Integer... ints) {
-        for (Integer anInt : ints) {
+    public void write(Long... ints) {
+        for (Long anInt : ints) {
             try {
                 in.put(anInt);
             } catch (InterruptedException e) {
@@ -68,7 +69,7 @@ public class VM {
         }
     }
 
-    public Integer read() {
+    public Long read() {
         try {
             return out.take();
         } catch (InterruptedException e) {
@@ -77,17 +78,17 @@ public class VM {
         }
     }
 
-    public BlockingQueue<Integer> getOutput() {
+    public BlockingQueue<Long> getOutput() {
         return out;
     }
 
     private void loadProgram(String str) {
-        List<Integer> ints = Arrays.stream(str.split(","))
-                .map(Integer::parseInt)
+        List<Long> ints = Arrays.stream(str.split(","))
+                .map(Long::parseLong)
                 .collect(Collectors.toList());
-        memory = new int[ints.size()];
+        memory = new long[ints.size()];
         for (int i = 0; i < ints.size(); i++) {
-            int i1 = ints.get(i);
+            long i1 = ints.get(i);
             memory[i] = i1;
         }
     }

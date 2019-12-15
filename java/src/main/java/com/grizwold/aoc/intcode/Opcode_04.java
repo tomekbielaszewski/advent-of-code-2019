@@ -7,7 +7,7 @@ class Opcode_04 implements Opcode {
     private String opcode;
 
     @Override
-    public boolean matching(int opcodeDef) {
+    public boolean matching(long opcodeDef) {
         opcode = Utils.toString(opcodeDef);
         paramModes = paramModes(opcode);
         return opcode.matches("...04");
@@ -17,7 +17,7 @@ class Opcode_04 implements Opcode {
     public void execute(VM vm) {
         System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
 
-        int result = getArg1(vm, paramModes);
+        long result = getArg1(vm, paramModes);
         vm.instructionPointer += 2;
         write(vm.out, result);
 
@@ -25,7 +25,7 @@ class Opcode_04 implements Opcode {
 
     }
 
-    private void write(BlockingQueue<Integer> out, int result) {
+    private void write(BlockingQueue<Long> out, long result) {
         try {
             out.put(result);
         } catch (InterruptedException e) {

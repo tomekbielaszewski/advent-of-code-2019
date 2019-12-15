@@ -7,7 +7,7 @@ class Opcode_07 implements Opcode {
     private String opcode;
 
     @Override
-    public boolean matching(int opcodeDef) {
+    public boolean matching(long opcodeDef) {
         opcode = Utils.toString(opcodeDef);
         paramModes = paramModes(opcode);
         return opcode.matches("...07");
@@ -17,9 +17,9 @@ class Opcode_07 implements Opcode {
     public void execute(VM vm) {
         System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
 
-        int arg1 = getArg1(vm, paramModes);
-        int arg2 = getArg2(vm, paramModes);
-        int resultPointer = getValue(vm.instructionPointer + 3, IMMEDIATE, vm);
+        long arg1 = getArg1(vm, paramModes);
+        long arg2 = getArg2(vm, paramModes);
+        int resultPointer = (int) getValue(vm.instructionPointer + 3, IMMEDIATE, vm);
         vm.memory[resultPointer] = (arg1 < arg2) ? 1 : 0;
         vm.instructionPointer += 4;
 
