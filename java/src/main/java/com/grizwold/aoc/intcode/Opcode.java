@@ -25,9 +25,10 @@ interface Opcode {
     }
 
     default int getArg1AsResult(VM vm, ParameterMode[] paramModes) {
-        if(paramModes[2]==IMMEDIATE)
-            System.err.println("Result pointer shouldn't be treated as IMMEDIATE. Somethings wrong?");
-        return (int) getValue(vm.instructionPointer + 1, paramModes[0], vm);
+        long pointer = getValue(vm.instructionPointer + 1, IMMEDIATE, vm);
+        if(paramModes[0]==RELATIVE)
+            pointer += vm.relativeBase;
+        return (int) pointer;
     }
 
     default long getArg2(VM vm, ParameterMode[] paramModes) {
@@ -35,9 +36,10 @@ interface Opcode {
     }
 
     default int getArg3AsResult(VM vm, ParameterMode[] paramModes) {
-        if(paramModes[2]==IMMEDIATE)
-            System.err.println("Result pointer shouldn't be treated as IMMEDIATE. Somethings wrong?");
-        return (int) getValue(vm.instructionPointer + 3, paramModes[2], vm);
+        long pointer = getValue(vm.instructionPointer + 3, IMMEDIATE, vm);
+        if(paramModes[2]==RELATIVE)
+            pointer += vm.relativeBase;
+        return (int) pointer;
     }
 
     default long getValue(int index, ParameterMode paramMode, VM vm) {

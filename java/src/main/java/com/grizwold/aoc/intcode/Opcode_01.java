@@ -18,7 +18,7 @@ class Opcode_01 implements Opcode {
         long arg1 = getArg1(vm, paramModes);
         long arg2 = getArg2(vm, paramModes);
         long result = arg1 + arg2;
-        int resultPointer = (int) getValue(vm.instructionPointer + 3, IMMEDIATE, vm);
+        int resultPointer = getArg3AsResult(vm, paramModes);
 
         String description = String.format("%s + %s = %s (@ %s)", arg1, arg2, result, resultPointer);
         System.out.println(printInstruction(vm, 4, paramModes, description));

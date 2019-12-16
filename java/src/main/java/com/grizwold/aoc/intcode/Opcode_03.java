@@ -18,7 +18,7 @@ class Opcode_03 implements Opcode {
     @Override
     public void execute(VM vm) {
         long input = read(vm.in);
-        int resultPointer = (int) getValue(vm.instructionPointer + 1, IMMEDIATE, vm);
+        int resultPointer = getArg1AsResult(vm, paramModes);
 
         String description = String.format("read %s into %s", input, resultPointer);
         System.out.println(printInstruction(vm, 2, paramModes, description));
