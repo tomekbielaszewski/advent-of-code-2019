@@ -31,6 +31,6 @@ interface Opcode {
                 vm.memory[index] :
                 paramMode == POSITION ?
                         vm.memory[(int) vm.memory[index]] :
-                        vm.memory[(int) vm.memory[vm.relativeBase + index]];
+                        vm.memory[(int) (vm.relativeBase + vm.memory[index])];
     }
 }
