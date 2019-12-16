@@ -2,8 +2,6 @@ package com.grizwold.aoc.intcode;
 
 import java.util.concurrent.BlockingQueue;
 
-import static com.grizwold.aoc.intcode.ParameterMode.IMMEDIATE;
-
 class Opcode_03 implements Opcode {
     private ParameterMode[] paramModes;
     private String opcode;
