@@ -13,6 +13,6 @@ class Opcode_99 implements Opcode {
     public void execute(VM vm) {
         vm.isRunning = false;
 
-        System.out.printf("@%s {%s} VM finished execution\n", vm.instructionPointer, opcode);
+        System.out.println(printInstruction(vm, 1, null, "VM finished execution"));
     }
 }

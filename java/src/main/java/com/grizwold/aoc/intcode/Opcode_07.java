@@ -17,14 +17,14 @@ class Opcode_07 implements Opcode {
 
     @Override
     public void execute(VM vm) {
-        System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
-
         long arg1 = getArg1(vm, paramModes);
         long arg2 = getArg2(vm, paramModes);
         int resultPointer = (int) getValue(vm.instructionPointer + 3, IMMEDIATE, vm);
+
+        String description = String.format("if %s < %s then 1 (@ %s); operation saved %s", arg1, arg2, resultPointer, vm.memory[resultPointer]);
+        System.out.println(printInstruction(vm, 4, paramModes, description));
+
         vm.memory[resultPointer] = (arg1 < arg2) ? 1 : 0;
         vm.instructionPointer += 4;
-
-        System.out.printf("if %s < %s then 1 (@ %s); operation saved %s | modes: %s\n", arg1, arg2, resultPointer, vm.memory[resultPointer], Arrays.toString(paramModes));
     }
 }

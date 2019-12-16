@@ -13,12 +13,12 @@ class Opcode_09 implements Opcode {
 
     @Override
     public void execute(VM vm) {
-        System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
-
         long arg1 = getArg1(vm, paramModes);
+
+        String description = String.format("relative base adjusted by %s to %s", arg1, vm.relativeBase);
+        System.out.println(printInstruction(vm, 2, paramModes, description));
+
         vm.relativeBase += arg1;
         vm.instructionPointer += 2;
-
-        System.out.printf("relative base adjusted by %s to %s | modes: %s\n", arg1, vm.relativeBase, paramModes[0]);
     }
 }

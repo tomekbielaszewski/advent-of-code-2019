@@ -15,14 +15,13 @@ class Opcode_04 implements Opcode {
 
     @Override
     public void execute(VM vm) {
-        System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
-
         long result = getArg1(vm, paramModes);
+
+        String description = String.format("print: \"%s\"", result);
+        System.out.println(printInstruction(vm, 2, paramModes, description));
+
         vm.instructionPointer += 2;
         write(vm.out, result);
-
-        System.out.printf(" print: \"%s\" | modes: %s\n", result, paramModes[0]);
-
     }
 
     private void write(BlockingQueue<Long> out, long result) {

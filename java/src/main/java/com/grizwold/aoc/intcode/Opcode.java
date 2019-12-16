@@ -1,5 +1,7 @@
 package com.grizwold.aoc.intcode;
 
+import java.util.Arrays;
+
 import static com.grizwold.aoc.intcode.ParameterMode.*;
 
 interface Opcode {
@@ -22,8 +24,20 @@ interface Opcode {
         return getValue(vm.instructionPointer + 1, paramModes[0], vm);
     }
 
+    default int getArg1AsResult(VM vm, ParameterMode[] paramModes) {
+        if(paramModes[2]==IMMEDIATE)
+            System.err.println("Result pointer shouldn't be treated as IMMEDIATE. Somethings wrong?");
+        return (int) getValue(vm.instructionPointer + 1, paramModes[0], vm);
+    }
+
     default long getArg2(VM vm, ParameterMode[] paramModes) {
         return getValue(vm.instructionPointer + 2, paramModes[1], vm);
+    }
+
+    default int getArg3AsResult(VM vm, ParameterMode[] paramModes) {
+        if(paramModes[2]==IMMEDIATE)
+            System.err.println("Result pointer shouldn't be treated as IMMEDIATE. Somethings wrong?");
+        return (int) getValue(vm.instructionPointer + 3, paramModes[2], vm);
     }
 
     default long getValue(int index, ParameterMode paramMode, VM vm) {
@@ -32,5 +46,17 @@ interface Opcode {
                 paramMode == POSITION ?
                         vm.memory[(int) vm.memory[index]] :
                         vm.memory[(int) (vm.relativeBase + vm.memory[index])];
+    }
+
+    default String printInstruction(VM vm, int instructionLength, ParameterMode[] paramModes, String description) {
+        long[] instr = new long[instructionLength];
+        System.arraycopy(vm.memory, vm.instructionPointer, instr, 0, instructionLength);
+        return String.format("@%-3s IP:%-6s REL:%-5s %-35s %-35s %s",
+                vm.instructionPointer,
+                Utils.toString(vm.memory[vm.instructionPointer]),
+                vm.relativeBase,
+                Arrays.toString(instr),
+                Arrays.toString(paramModes),
+                description);
     }
 }

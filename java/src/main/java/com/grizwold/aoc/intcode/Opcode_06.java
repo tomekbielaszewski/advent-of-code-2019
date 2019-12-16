@@ -1,7 +1,5 @@
 package com.grizwold.aoc.intcode;
 
-import java.util.Arrays;
-
 class Opcode_06 implements Opcode {
     private ParameterMode[] paramModes;
     private String opcode;
@@ -15,16 +13,16 @@ class Opcode_06 implements Opcode {
 
     @Override
     public void execute(VM vm) {
-        System.out.printf("@%s {%s} ", vm.instructionPointer, opcode);
-
         long result = getArg1(vm, paramModes);
         long jump = getArg2(vm, paramModes);
+
+        String description = String.format("jump to %s if %s == 0", jump, result);
+        System.out.println(printInstruction(vm, 3, paramModes, description));
+
         if (result == 0) {
             vm.instructionPointer = (int) jump;
         } else {
             vm.instructionPointer += 3;
         }
-
-        System.out.printf("jump to %s if %s == 0 | modes: %s\n", jump, result, Arrays.toString(paramModes));
     }
 }
