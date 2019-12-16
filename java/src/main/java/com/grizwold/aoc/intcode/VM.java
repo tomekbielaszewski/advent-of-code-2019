@@ -25,7 +25,7 @@ public class VM {
         this(new ArrayBlockingQueue<Long>(inputs.length) {{
                  this.addAll(Arrays.asList(inputs));
              }},
-                new ArrayBlockingQueue<Long>(1));
+                new ArrayBlockingQueue<>(100));
     }
 
     public VM(BlockingQueue<Long> in, BlockingQueue<Long> out) {
@@ -40,10 +40,15 @@ public class VM {
         opcodes.add(new Opcode_06());
         opcodes.add(new Opcode_07());
         opcodes.add(new Opcode_08());
+        opcodes.add(new Opcode_09());
     }
 
     public long[] execute(String program) {
-        loadProgram(program);
+        return this.execute(program, 0);
+    }
+
+    public long[] execute(String program, int additionalMemory) {
+        loadProgram(program, additionalMemory);
         try {
             while (isRunning) {
                 opcodes.stream()
@@ -82,11 +87,15 @@ public class VM {
         return out;
     }
 
-    private void loadProgram(String str) {
+    public Long[] getOutputs() {
+        return out.toArray(new Long[0]);
+    }
+
+    private void loadProgram(String str, int additionalMemory) {
         List<Long> ints = Arrays.stream(str.split(","))
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
-        memory = new long[ints.size()];
+        memory = new long[ints.size() + additionalMemory];
         for (int i = 0; i < ints.size(); i++) {
             long i1 = ints.get(i);
             memory[i] = i1;
