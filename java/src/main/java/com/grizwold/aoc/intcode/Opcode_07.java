@@ -1,5 +1,7 @@
 package com.grizwold.aoc.intcode;
 
+import java.util.Arrays;
+
 import static com.grizwold.aoc.intcode.ParameterMode.IMMEDIATE;
 
 class Opcode_07 implements Opcode {
@@ -23,6 +25,6 @@ class Opcode_07 implements Opcode {
         vm.memory[resultPointer] = (arg1 < arg2) ? 1 : 0;
         vm.instructionPointer += 4;
 
-        System.out.printf("if %s < %s then 1 (@ %s); operation saved %s | modes: %s\n", arg1, arg2, resultPointer, vm.memory[resultPointer], paramModes[0]);
+        System.out.printf("if %s < %s then 1 (@ %s); operation saved %s | modes: %s\n", arg1, arg2, resultPointer, vm.memory[resultPointer], Arrays.toString(paramModes));
     }
 }

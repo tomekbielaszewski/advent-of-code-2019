@@ -19,6 +19,6 @@ class Opcode_09 implements Opcode {
         vm.relativeBase += arg1;
         vm.instructionPointer += 2;
 
-        System.out.printf("relative base adjusteb by %s to %s | modes: %s\n", arg1, vm.relativeBase, paramModes[0]);
+        System.out.printf("relative base adjusted by %s to %s | modes: %s\n", arg1, vm.relativeBase, paramModes[0]);
     }
 }
